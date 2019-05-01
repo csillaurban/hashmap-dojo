@@ -2,6 +2,7 @@ package hashmap;
 
 public class HashMap implements HashMapInterface{
     private int buckets = 16;
+    private int elementsCounter = 0;
 
     @Override
     public void add(String key, int value) {
@@ -23,12 +24,15 @@ public class HashMap implements HashMapInterface{
 
     }
 
-    private Integer getHash(String key) {
-        Integer hash = key.hashCode();
-        return hash % buckets;
+    private int getHash(String key) {
+        return key.hashCode() % buckets;
     }
 
     private void resizeIfNeeded() {
-
+        if(elementsCounter > buckets * 2) {
+            buckets = buckets *2;
+        } else if (elementsCounter < buckets / 2) {
+            buckets = buckets / 2;
+        }
     }
 }
