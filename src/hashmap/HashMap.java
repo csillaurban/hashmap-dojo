@@ -14,18 +14,26 @@ public class HashMap implements HashMapInterface{
     @Override
     public void add(String key, int value) {
         int index = getHash(key);
-        LinkedList<Entry> list = elements[index];
+        System.out.println("Index for new Entry: " + index);
 
-        for (Entry entry : list) {
-            if (entry.getKey().equals(key)) {
-                try {
-                    throw new ExistingKeyException("Key is already existing.");
-                } catch (ExistingKeyException e) {
-                    e.getMessage();
-                    return;
+        if(elements[index] != null) {
+            ListIterator iter = elements[index].listIterator();
+            while(iter.hasNext()) {
+                Entry entry = (Entry) iter.next();
+                if (entry.getKey().equals(key)) {
+                    try {
+                        throw new ExistingKeyException("Key is already existing.");
+                    } catch (ExistingKeyException e) {
+                        e.getMessage();
+                        return;
+                    }
                 }
             }
+        } else {
+            elements[index] = new LinkedList<Entry>();
         }
+
+        LinkedList list = elements[index];
 
         elementsCounter++;
         resizeIfNeeded();
@@ -61,14 +69,15 @@ public class HashMap implements HashMapInterface{
         }
     }
 
-
     public void printEntries() {
         for (int i = 0; i < elements.length; i++) {
             System.out.println("========= Bucket: " + i + " =========");
-            for (Entry entry: elements[i]
-                 ) {
-                System.out.println("Entry's key: " + entry.getKey() + "Entry's value: " + entry.getValue());
-                System.out.println("===============================================");
+            if(elements[i] != null) {
+                for (Entry entry : elements[i]
+                ) {
+                    System.out.println("Entry's key: " + entry.getKey() + "; Entry's value: " + entry.getValue());
+                    System.out.println("===============================================");
+                }
             }
         }
     }
