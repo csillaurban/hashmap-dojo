@@ -36,7 +36,6 @@ public class HashMap implements HashMapInterface{
         LinkedList<Entry> list = elements[index];
 
         elementsCounter++;
-        resizeIfNeeded();
 
         Entry newEntry = new Entry(key, value);
         list.add(newEntry);
@@ -66,7 +65,18 @@ public class HashMap implements HashMapInterface{
 
     @Override
     public void remove(String key) {
+        int hash = getHash(key);
+        int idx = getHashIdx(key);
 
+        LinkedList<Entry> list = elements[idx];
+        ListIterator iter = list.listIterator();
+        while(iter.hasNext()) {
+            Entry entry = (Entry) iter.next();
+            if(getHash(entry.getKey()) == hash && key.equals(entry.getKey())) {
+                iter.remove();
+                elementsCounter--;
+            }
+        }
     }
 
     @Override
