@@ -7,14 +7,13 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 public class HashMap implements HashMapInterface{
-    private int buckets = 16;
+    private int buckets = 3;
     private int elementsCounter = 0;
     private LinkedList<Entry>[] elements = new LinkedList[buckets];
 
     @Override
     public void add(String key, int value) {
         int index = getHashIdx(key);
-        System.out.println("Index for new " + key + " : " + index);
 
         if(elements[index] != null) {
             ListIterator iter = elements[index].listIterator();
@@ -24,7 +23,7 @@ public class HashMap implements HashMapInterface{
                     try {
                         throw new ExistingKeyException("Key is already existing.");
                     } catch (ExistingKeyException e) {
-                        e.getMessage();
+                        System.out.println(e.getMessage());
                         return;
                     }
                 }
@@ -55,6 +54,7 @@ public class HashMap implements HashMapInterface{
             if(getHash(entry.getKey()) == hash && key.equals(entry.getKey())) {
                 value = entry.getValue();
                 System.out.println("Value found: " + value);
+                break;
             } else {
                 System.out.println("There is no such key");
                 return null;
@@ -81,7 +81,8 @@ public class HashMap implements HashMapInterface{
 
     @Override
     public void clearAll() {
-
+        elements = null;
+        elementsCounter = 0;
     }
 
     private int getHashIdx(String key) {
@@ -90,15 +91,6 @@ public class HashMap implements HashMapInterface{
 
     private int getHash(String key) {
         return key.hashCode();
-    }
-
-    private void resizeIfNeeded() {
-        if(elementsCounter > buckets * 2) {
-            buckets = buckets *2;
-        } else if (elementsCounter < buckets / 2) {
-            buckets = buckets / 2;
-            System.out.println("Resizing elements.");
-        }
     }
 
     public void printEntries() {
@@ -112,7 +104,6 @@ public class HashMap implements HashMapInterface{
                 }
             }
         }
-
         System.out.println("Sum of elements in map: " + elementsCounter);
     }
 }
