@@ -8,5 +8,6 @@ public class Main {
         map.add("Entry2", 2);
         map.add("Entry3", 3);
         map.printEntries();
+        map.getValue("Entry2");
     }
 }

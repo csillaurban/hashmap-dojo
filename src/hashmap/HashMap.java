@@ -13,8 +13,8 @@ public class HashMap implements HashMapInterface{
 
     @Override
     public void add(String key, int value) {
-        int index = getHash(key);
-        System.out.println("Index for new Entry: " + index);
+        int index = getHashIdx(key);
+        System.out.println("Index for new " + key + " : " + index);
 
         if(elements[index] != null) {
             ListIterator iter = elements[index].listIterator();
@@ -33,7 +33,7 @@ public class HashMap implements HashMapInterface{
             elements[index] = new LinkedList<Entry>();
         }
 
-        LinkedList list = elements[index];
+        LinkedList<Entry> list = elements[index];
 
         elementsCounter++;
         resizeIfNeeded();
@@ -43,8 +43,25 @@ public class HashMap implements HashMapInterface{
     }
 
     @Override
-    public int getValue(String key) {
-        return 0;
+    public Integer getValue(String key) {
+        int hash = getHash(key);
+        int idx = getHashIdx(key);
+        Integer value = null;
+
+        LinkedList<Entry> list = elements[idx];
+
+        ListIterator iter = list.listIterator();
+        while(iter.hasNext()) {
+            Entry entry = (Entry) iter.next();
+            if(getHash(entry.getKey()) == hash && key.equals(entry.getKey())) {
+                value = entry.getValue();
+                System.out.println("Value found: " + value);
+            } else {
+                System.out.println("There is no such key");
+                return null;
+            }
+        }
+        return value;
     }
 
     @Override
@@ -57,8 +74,12 @@ public class HashMap implements HashMapInterface{
 
     }
 
+    private int getHashIdx(String key) {
+        return getHash(key) % buckets;
+    }
+
     private int getHash(String key) {
-        return key.hashCode() % buckets;
+        return key.hashCode();
     }
 
     private void resizeIfNeeded() {
@@ -66,13 +87,14 @@ public class HashMap implements HashMapInterface{
             buckets = buckets *2;
         } else if (elementsCounter < buckets / 2) {
             buckets = buckets / 2;
+            System.out.println("Resizing elements.");
         }
     }
 
     public void printEntries() {
         for (int i = 0; i < elements.length; i++) {
-            System.out.println("========= Bucket: " + i + " =========");
             if(elements[i] != null) {
+                System.out.println("========= Bucket: " + i + " =========");
                 for (Entry entry : elements[i]
                 ) {
                     System.out.println("Entry's key: " + entry.getKey() + "; Entry's value: " + entry.getValue());
@@ -80,5 +102,7 @@ public class HashMap implements HashMapInterface{
                 }
             }
         }
+
+        System.out.println("Sum of elements in map: " + elementsCounter);
     }
 }
