@@ -1,7 +1,7 @@
 package hashmap;
 
 public class HashMap implements HashMapInterface{
-    private int bucket = 16;
+    private int buckets = 16;
 
     @Override
     public void add(String key, int value) {
@@ -24,7 +24,8 @@ public class HashMap implements HashMapInterface{
     }
 
     private Integer getHash(String key) {
-        return null;
+        Integer hash = key.hashCode();
+        return hash % buckets;
     }
 
     private void resizeIfNeeded() {
